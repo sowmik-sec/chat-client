@@ -5,16 +5,14 @@ const Input = ({
   name = "",
   type = "text",
   className = "",
-  isRequired = false,
+  isRequired = true,
   placeholder = "",
   value = "",
   onChange = () => {},
 }) => {
   return (
     <div className="w-1/2">
-      <label For={name} className="block mb-2 text-sm font-medium ">
-        {label}
-      </label>
+      <label className="block mb-2 text-sm font-medium ">{label}</label>
       <input
         type={type}
         id={name}

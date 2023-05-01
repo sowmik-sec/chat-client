@@ -16,38 +16,44 @@ const Form = ({ isSignInPage = false }) => {
       <div className="text-xl font-light mb-10">
         {isSignInPage ? "Sign in to get explored" : "Sign up  to get started"}{" "}
       </div>
-      {!isSignInPage && (
+      <form
+        className="w-full flex flex-col items-center"
+        onSubmit={() => console.log("clicked for submit")}
+      >
+        {!isSignInPage && (
+          <Input
+            label="Full name"
+            name="name"
+            placeholder="Enter your full name"
+            className="mb-4"
+            value={data.fullName}
+            onChange={(e) => setData({ ...data, fullName: e.target.value })}
+          />
+        )}
         <Input
-          label="Full name"
-          name="name"
-          placeholder="Enter your full name"
+          label="Email"
+          name="email"
+          placeholder="Enter Email"
+          type="email"
           className="mb-4"
-          value={data.fullName}
-          onChange={(e) => setData({ ...data, fullName: e.target.value })}
+          value={data.email}
+          onChange={(e) => setData({ ...data, email: e.target.value })}
         />
-      )}
-      <Input
-        label="Email"
-        name="email"
-        placeholder="Enter Email"
-        type="email"
-        className="mb-4"
-        value={data.email}
-        onChange={(e) => setData({ ...data, email: e.target.value })}
-      />
-      <Input
-        label="Password"
-        name="password"
-        placeholder="Enter Password"
-        type="password"
-        className="mb-8"
-        value={data.password}
-        onChange={(e) => setData({ ...data, password: e.target.value })}
-      />
-      <Button
-        label={isSignInPage ? "Sign In" : "Sign Up"}
-        className="w-1/2 mb-2"
-      />
+        <Input
+          label="Password"
+          name="password"
+          placeholder="Enter Password"
+          type="password"
+          className="mb-8"
+          value={data.password}
+          onChange={(e) => setData({ ...data, password: e.target.value })}
+        />
+        <Button
+          label={isSignInPage ? "Sign In" : "Sign Up"}
+          className="w-1/2 mb-2"
+          type="submit"
+        />
+      </form>
       <div>
         {isSignInPage ? "Didn't have an account?" : "Already have an account?"}
 
