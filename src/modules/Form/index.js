@@ -12,6 +12,22 @@ const Form = ({ isSignInPage = false }) => {
     password: "",
   });
   const navigate = useNavigate();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(`http://localhost:5000/api/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          console.log("User added to database");
+        }
+      });
+  };
   return (
     <div className="bg-light h-screen flex items-center justify-center">
       <div className="bg-white w-[550px] h-[600px] shadow-lg rounded-lg flex flex-col justify-center items-center">
@@ -23,7 +39,7 @@ const Form = ({ isSignInPage = false }) => {
         </div>
         <form
           className="w-full flex flex-col items-center"
-          onSubmit={() => console.log("clicked for submit")}
+          onSubmit={(e) => handleSubmit(e)}
         >
           {!isSignInPage && (
             <Input
