@@ -46,7 +46,7 @@ const Form = ({ isSignInPage = false }) => {
               label="Full name"
               name="name"
               placeholder="Enter your full name"
-              className="mb-4 w-1/2"
+              className="mb-4 w-[75%]"
               value={data.fullName}
               onChange={(e) => setData({ ...data, fullName: e.target.value })}
             />
@@ -56,7 +56,7 @@ const Form = ({ isSignInPage = false }) => {
             name="email"
             placeholder="Enter Email"
             type="email"
-            className="mb-4 w-1/2"
+            className="mb-4 w-[75%]"
             value={data.email}
             onChange={(e) => setData({ ...data, email: e.target.value })}
           />
@@ -65,13 +65,13 @@ const Form = ({ isSignInPage = false }) => {
             name="password"
             placeholder="Enter Password"
             type="password"
-            className="mb-8 w-1/2"
+            className="mb-8 w-[75%]"
             value={data.password}
             onChange={(e) => setData({ ...data, password: e.target.value })}
           />
           <Button
             label={isSignInPage ? "Sign In" : "Sign Up"}
-            className="w-1/2 mb-2"
+            className="w-[75%] mb-2"
             type="submit"
           />
         </form>
