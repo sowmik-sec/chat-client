@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "../../assets/avatar.jpg";
 import Input from "../../components/Input";
 
@@ -38,6 +38,25 @@ const Dashboard = () => {
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user:detail"))
   );
+  const [conversations, setConversations] = useState([]);
+  useEffect(() => {
+    const loggedInUser = JSON.parse(localStorage.getItem("user:detail"));
+    const fetchConversations = async () => {
+      const res = await fetch(
+        `http://localhost:5000/api/conversations/${loggedInUser?.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const resData = await res.json();
+      setConversations(resData);
+    };
+    fetchConversations();
+  }, []);
+  console.log(conversations);
   return (
     <div className="w-screen flex">
       <div className="w-1/4 h-screen bg-secondary">
@@ -60,13 +79,13 @@ const Dashboard = () => {
         <div className="mx-5 mt-3">
           <div className="text-primary text-lg mb-10">Messages</div>
           <div>
-            {contacts.map(({ name, status, img }) => {
+            {conversations.map(({ conversationId, user }) => {
               return (
                 <div className="flex items-center py-5 border-b border-b-gray-500">
                   <div className="cursor-pointer flex items-center">
                     <div>
                       <img
-                        src={img}
+                        src={Avatar}
                         alt=""
                         width={50}
                         height={50}
@@ -74,9 +93,9 @@ const Dashboard = () => {
                       />
                     </div>
                     <div className="ml-2">
-                      <h3 className="text-lg font-semibold">{name}</h3>
+                      <h3 className="text-lg font-semibold">{user.fullName}</h3>
                       <p className="text-sm font-light text-gray-600">
-                        {status}
+                        {user.email}
                       </p>
                     </div>
                   </div>
