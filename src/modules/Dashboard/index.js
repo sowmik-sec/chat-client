@@ -39,6 +39,7 @@ const Dashboard = () => {
     JSON.parse(localStorage.getItem("user:detail"))
   );
   const [conversations, setConversations] = useState([]);
+  const [messages, setMessages] = useState([]);
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("user:detail"));
     const fetchConversations = async () => {
@@ -57,6 +58,17 @@ const Dashboard = () => {
     fetchConversations();
   }, []);
   console.log(conversations);
+  const fetchMessages = (conversationId) => {
+    fetch(`http://localhost:5000/api/message/${conversationId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((resData) => setMessages(resData));
+  };
+  console.log(messages);
   return (
     <div className="w-screen flex">
       <div className="w-1/4 h-screen bg-secondary">
@@ -79,29 +91,40 @@ const Dashboard = () => {
         <div className="mx-5 mt-3">
           <div className="text-primary text-lg mb-10">Messages</div>
           <div>
-            {conversations.map(({ conversationId, user }) => {
-              return (
-                <div className="flex items-center py-5 border-b border-b-gray-500">
-                  <div className="cursor-pointer flex items-center">
-                    <div>
-                      <img
-                        src={Avatar}
-                        alt=""
-                        width={50}
-                        height={50}
-                        className="rounded-full"
-                      />
-                    </div>
-                    <div className="ml-2">
-                      <h3 className="text-lg font-semibold">{user.fullName}</h3>
-                      <p className="text-sm font-light text-gray-600">
-                        {user.email}
-                      </p>
+            {conversations.length > 0 ? (
+              conversations.map(({ conversationId, user }) => {
+                return (
+                  <div className="flex items-center py-5 border-b border-b-gray-500">
+                    <div
+                      className="cursor-pointer flex items-center"
+                      onClick={() => fetchMessages(conversationId)}
+                    >
+                      <div>
+                        <img
+                          src={Avatar}
+                          alt=""
+                          width={50}
+                          height={50}
+                          className="rounded-full"
+                        />
+                      </div>
+                      <div className="ml-2">
+                        <h3 className="text-lg font-semibold">
+                          {user.fullName}
+                        </h3>
+                        <p className="text-sm font-light text-gray-600">
+                          {user.email}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <div className="text-center text-lg font-semibold mt-24">
+                No Conversations
+              </div>
+            )}
           </div>
         </div>
       </div>
