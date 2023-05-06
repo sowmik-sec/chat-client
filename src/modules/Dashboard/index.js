@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "../../assets/avatar.jpg";
 import Input from "../../components/Input";
 
@@ -35,6 +35,9 @@ const Dashboard = () => {
       img: Avatar,
     },
   ];
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user:detail"))
+  );
   return (
     <div className="w-screen flex">
       <div className="w-1/4 h-screen bg-secondary">
@@ -49,7 +52,7 @@ const Dashboard = () => {
             />
           </div>
           <div className="ml-2">
-            <h3 className="text-2xl">Tutorials Dev</h3>
+            <h3 className="text-2xl">{user?.fullName}</h3>
             <p className="text-lg font-light">My Account</p>
           </div>
         </div>
