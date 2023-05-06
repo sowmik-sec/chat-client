@@ -55,7 +55,10 @@ const Dashboard = () => {
       }),
     })
       .then((res) => res.json())
-      .then((resData) => console.log(resData));
+      .then((resData) => {
+        console.log(resData);
+        setMessage("");
+      });
   };
   return (
     <div className="w-screen flex">
