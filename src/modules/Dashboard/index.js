@@ -3,43 +3,11 @@ import Avatar from "../../assets/avatar.jpg";
 import Input from "../../components/Input";
 
 const Dashboard = () => {
-  const contacts = [
-    {
-      name: "Ahsan",
-      status: "Available",
-      img: Avatar,
-    },
-    {
-      name: "Habib",
-      status: "Available",
-      img: Avatar,
-    },
-    {
-      name: "Sowmik",
-      status: "Available",
-      img: Avatar,
-    },
-    {
-      name: "Volga",
-      status: "Available",
-      img: Avatar,
-    },
-    {
-      name: "Mango",
-      status: "Available",
-      img: Avatar,
-    },
-    {
-      name: "Fan",
-      status: "Available",
-      img: Avatar,
-    },
-  ];
   const [user, setUser] = useState(
     JSON.parse(localStorage.getItem("user:detail"))
   );
   const [conversations, setConversations] = useState([]);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState({});
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("user:detail"));
     const fetchConversations = async () => {
@@ -58,7 +26,7 @@ const Dashboard = () => {
     fetchConversations();
   }, []);
   console.log(conversations);
-  const fetchMessages = (conversationId) => {
+  const fetchMessages = (conversationId, user) => {
     fetch(`http://localhost:5000/api/message/${conversationId}`, {
       method: "GET",
       headers: {
@@ -66,7 +34,7 @@ const Dashboard = () => {
       },
     })
       .then((res) => res.json())
-      .then((resData) => setMessages(resData));
+      .then((resData) => setMessages({ messages: resData, receiver: user }));
   };
   console.log(messages);
   return (
@@ -97,7 +65,7 @@ const Dashboard = () => {
                   <div className="flex items-center py-5 border-b border-b-gray-500">
                     <div
                       className="cursor-pointer flex items-center"
-                      onClick={() => fetchMessages(conversationId)}
+                      onClick={() => fetchMessages(conversationId, user)}
                     >
                       <div>
                         <img
@@ -129,90 +97,65 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="w-1/2 h-screen bg-white flex flex-col items-center">
-        <div className="w-[75%] bg-secondary h-[80px] my-6 rounded-full flex items-center px-6">
-          <div className="cursor-pointer">
-            <img
-              src={Avatar}
-              alt=""
-              width={50}
-              height={50}
-              className="rounded-full"
-            />
+        {messages?.receiver?.fullName && (
+          <div className="w-[75%] bg-secondary h-[80px] my-6 rounded-full flex items-center px-6 py-2">
+            <div className="cursor-pointer">
+              <img
+                src={Avatar}
+                alt=""
+                width={50}
+                height={50}
+                className="rounded-full"
+              />
+            </div>
+            <div className="ml-2 mr-auto">
+              <h3 className="text-lg">{messages?.receiver?.fullName}</h3>
+              <p className="text-sm font-light text-gray-600">
+                {messages?.receiver?.email}
+              </p>
+            </div>
+            <div className="cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon icon-tabler icon-tabler-phone-outgoing"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="black"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
+                <line x1="15" y1="9" x2="20" y2="4" />
+                <polyline points="16 4 20 4 20 8" />
+              </svg>
+            </div>
           </div>
-          <div className="ml-2 mr-auto">
-            <h3 className="text-lg">Sowmik</h3>
-            <p className="text-sm font-light text-gray-600">Online</p>
-          </div>
-          <div className="cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="icon icon-tabler icon-tabler-phone-outgoing"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="black"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
-              <line x1="15" y1="9" x2="20" y2="4" />
-              <polyline points="16 4 20 4 20 8" />
-            </svg>
-          </div>
-        </div>
+        )}
         <div className="h-[75%] w-full overflow-y-scroll shadow-sm">
           <div className="p-14">
-            <div className="max-w-[45%] bg-secondary rounded-b-xl rounded-tr-xl p-4 mb-6">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias,
-              sint?
-            </div>
-            <div className="p-4 max-w-[45%] bg-primary rounded-b-xl rounded-tl-xl ml-auto text-white mb-6">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid,
-              voluptates!
-            </div>
-            <div className="max-w-[45%] bg-secondary rounded-b-xl rounded-tr-xl p-4 mb-6">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias,
-              sint?
-            </div>
-            <div className="p-4 max-w-[45%] bg-primary rounded-b-xl rounded-tl-xl ml-auto text-white mb-6">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid,
-              voluptates!
-            </div>
-            <div className="max-w-[45%] bg-secondary rounded-b-xl rounded-tr-xl p-4 mb-6">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias,
-              sint?
-            </div>
-            <div className="p-4 max-w-[45%] bg-primary rounded-b-xl rounded-tl-xl ml-auto text-white mb-6">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid,
-              voluptates!
-            </div>
-            <div className="max-w-[45%] bg-secondary rounded-b-xl rounded-tr-xl p-4 mb-6">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias,
-              sint?
-            </div>
-            <div className="p-4 max-w-[45%] bg-primary rounded-b-xl rounded-tl-xl ml-auto text-white mb-6">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid,
-              voluptates!
-            </div>
-            <div className="max-w-[45%] bg-secondary rounded-b-xl rounded-tr-xl p-4 mb-6">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias,
-              sint?
-            </div>
-            <div className="p-4 max-w-[45%] bg-primary rounded-b-xl rounded-tl-xl ml-auto text-white mb-6">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid,
-              voluptates!
-            </div>
-            <div className="max-w-[45%] bg-secondary rounded-b-xl rounded-tr-xl p-4 mb-6">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias,
-              sint?
-            </div>
-            <div className="p-4 max-w-[45%] bg-primary rounded-b-xl rounded-tl-xl ml-auto text-white mb-6">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid,
-              voluptates!
-            </div>
+            {messages?.messages?.length > 0 ? (
+              messages?.messages?.map(({ message, user: { id } = {} }) => {
+                return (
+                  <div
+                    className={`max-w-[40%] rounded-b-xl p-4  mb-6 ${
+                      id === user?.id
+                        ? "bg-primary text-white rounded-tl-xl ml-auto"
+                        : "bg-secondary rounded-tr-xl"
+                    } `}
+                  >
+                    {message}
+                  </div>
+                );
+              })
+            ) : (
+              <div className="text-center text-lg font-semi mt-24">
+                No Messages or No Conversation Selected
+              </div>
+            )}
           </div>
         </div>
         <div className="p-6 w-full flex items-center">
