@@ -14,17 +14,29 @@ const Form = ({ isSignInPage = false }) => {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:5000/api/register`, {
+    fetch(`http://localhost:5000/api/${isSignInPage ? "login" : "register"}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.acknowledged) {
-          console.log("User added to database");
+      .then((res) => {
+        if (res.status === 400) {
+          alert("Invalid credentials");
+        } else {
+          return res.json();
+        }
+      })
+      .then((resData) => {
+        console.log(resData);
+        if (resData === undefined) {
+          return;
+        }
+        if (resData.token) {
+          localStorage.setItem("user:token", resData.token);
+          localStorage.setItem("user:detail", JSON.stringify(resData.user));
+          navigate("/");
         }
       });
   };
