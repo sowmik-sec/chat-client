@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState({});
   const [message, setMessage] = useState("");
+  const [users, setUsers] = useState([]);
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("user:detail"));
     const fetchConversations = async () => {
@@ -27,16 +28,19 @@ const Dashboard = () => {
     fetchConversations();
   }, []);
   console.log(conversations);
-  const fetchMessages = (conversationId, user) => {
-    fetch(`http://localhost:5000/api/message/${conversationId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+  const fetchMessages = (conversationId, receiver) => {
+    fetch(
+      `http://localhost:5000/api/message/${conversationId}?senderId=${user?.id}&&receiverId=${receiver?.receiverId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((res) => res.json())
       .then((resData) =>
-        setMessages({ messages: resData, receiver: user, conversationId })
+        setMessages({ messages: resData, receiver, conversationId })
       );
   };
   console.log(messages);
@@ -60,6 +64,16 @@ const Dashboard = () => {
         setMessage("");
       });
   };
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/users/${user?.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((resData) => setUsers(resData));
+  }, [user?.id]);
   return (
     <div className="w-screen flex">
       <div className="w-1/4 h-screen bg-secondary">
@@ -239,7 +253,43 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-      <div className="w-1/4 h-screen bg-light"></div>
+      <div className="w-1/4 h-screen bg-light px-8 py-16">
+        <div className="text-primary text-lg">People</div>
+        <div>
+          {users.length > 0 ? (
+            users.map(({ userId, user }) => {
+              return (
+                <div className="flex items-center py-5 border-b border-b-gray-500">
+                  <div
+                    className="cursor-pointer flex items-center"
+                    onClick={() => fetchMessages("new", user)}
+                  >
+                    <div>
+                      <img
+                        src={Avatar}
+                        alt=""
+                        width={50}
+                        height={50}
+                        className="rounded-full"
+                      />
+                    </div>
+                    <div className="ml-2">
+                      <h3 className="text-lg font-semibold">{user.fullName}</h3>
+                      <p className="text-sm font-light text-gray-600">
+                        {user.email}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center text-lg font-semibold mt-24">
+              No Conversations
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
