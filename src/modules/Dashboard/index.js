@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Avatar from "../../assets/avatar.jpg";
 import Input from "../../components/Input";
 import { io } from "socket.io-client";
@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
   const [socket, setSocket] = useState(null);
+  const messageRef = useRef(null);
 
   useEffect(() => {
     setSocket(io("http://localhost:5050"));
@@ -33,6 +34,10 @@ const Dashboard = () => {
       }));
     });
   }, [socket, user?.id, user]);
+
+  useEffect(() => {
+    messageRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages?.messages]);
 
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("user:detail"));
@@ -206,15 +211,18 @@ const Dashboard = () => {
             {messages?.messages?.length > 0 ? (
               messages?.messages?.map(({ message, user: { id } = {} }) => {
                 return (
-                  <div
-                    className={`max-w-[40%] rounded-b-xl p-4  mb-6 ${
-                      id === user?.id
-                        ? "bg-primary text-white rounded-tl-xl ml-auto"
-                        : "bg-secondary rounded-tr-xl"
-                    } `}
-                  >
-                    {message}
-                  </div>
+                  <>
+                    <div
+                      className={`max-w-[40%] rounded-b-xl p-4  mb-6 ${
+                        id === user?.id
+                          ? "bg-primary text-white rounded-tl-xl ml-auto"
+                          : "bg-secondary rounded-tr-xl"
+                      } `}
+                    >
+                      {message}
+                    </div>
+                    <div ref={messageRef}></div>
+                  </>
                 );
               })
             ) : (
