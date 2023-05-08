@@ -110,7 +110,7 @@ const Dashboard = () => {
   }, [user?.id]);
   return (
     <div className="w-screen flex">
-      <div className="w-1/4 h-screen bg-secondary">
+      <div className="w-1/4 h-screen bg-secondary overflow-y-scroll">
         <div className="flex items-center my-5 mx-6">
           <div>
             <img
@@ -290,7 +290,7 @@ const Dashboard = () => {
           </div>
         )}
       </div>
-      <div className="w-1/4 h-screen bg-light px-8 py-16">
+      <div className="w-1/4 h-screen bg-light px-8 py-16 overflow-y-scroll">
         <div className="text-primary text-lg">People</div>
         <div>
           {users.length > 0 ? (
